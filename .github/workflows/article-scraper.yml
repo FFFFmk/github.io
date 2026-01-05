@@ -40,6 +40,17 @@ jobs:
         run: |
           ls -la articles/
 
+      - name: メール通知の送信
+        run: |
+          python send_email.py
+        env:
+          EMAIL_TO: fi.13-51@outlook.jp
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        continue-on-error: true
+
       - name: Git設定
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"

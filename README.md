@@ -12,6 +12,7 @@ FXトレードに関するブログサイトです。
 - **記事取得**: Business Lawyersの新着特集記事を自動収集
 - **要約生成**: 各記事の内容を要約
 - **PDF出力**: 見やすいPDF形式で保存
+- **メール通知**: 新着記事をメールで自動通知（PDF添付）
 
 ### 生成されるファイル
 
@@ -43,12 +44,68 @@ python article_scraper.py
 - **自動実行**: 毎日日本時間10時（UTC 1時）
 - **手動実行**: いつでも可能
 
+### メール通知の設定
+
+新着記事をメールで受信するには、GitHub Secretsに以下の設定が必要です。
+
+#### 1. GitHub Secretsの設定
+
+リポジトリの `Settings` → `Secrets and variables` → `Actions` で以下のシークレットを追加してください：
+
+| シークレット名 | 説明 | 例 |
+|---|---|---|
+| `SMTP_SERVER` | SMTPサーバーアドレス | `smtp.gmail.com` |
+| `SMTP_PORT` | SMTPポート番号 | `587` (TLS) または `465` (SSL) |
+| `SMTP_USER` | SMTP認証ユーザー名（メールアドレス） | `your-email@gmail.com` |
+| `SMTP_PASSWORD` | SMTP認証パスワード | アプリパスワード |
+
+#### 2. Gmail を使用する場合
+
+1. Googleアカウントで[2段階認証を有効化](https://myaccount.google.com/security)
+2. [アプリパスワードを生成](https://myaccount.google.com/apppasswords)
+3. 生成されたパスワードを `SMTP_PASSWORD` に設定
+
+**設定例:**
+- `SMTP_SERVER`: `smtp.gmail.com`
+- `SMTP_PORT`: `587`
+- `SMTP_USER`: `your-email@gmail.com`
+- `SMTP_PASSWORD`: 生成されたアプリパスワード（16桁）
+
+#### 3. Outlook.com を使用する場合
+
+**設定例:**
+- `SMTP_SERVER`: `smtp-mail.outlook.com`
+- `SMTP_PORT`: `587`
+- `SMTP_USER`: `your-email@outlook.com`
+- `SMTP_PASSWORD`: Outlookアカウントのパスワード
+
+#### 4. 通知先メールアドレス
+
+通知先は `fi.13-51@outlook.jp` に設定されています。
+
+変更する場合は `.github/workflows/article-scraper.yml` の `EMAIL_TO` を編集してください。
+
+#### 5. メール送信のテスト
+
+ローカルでテストする場合：
+
+```bash
+export EMAIL_TO="fi.13-51@outlook.jp"
+export SMTP_SERVER="smtp.gmail.com"
+export SMTP_PORT="587"
+export SMTP_USER="your-email@gmail.com"
+export SMTP_PASSWORD="your-app-password"
+
+python send_email.py
+```
+
 ### ファイル構成
 
 ```
 .
 ├── index.html                    # ブログのメインページ
 ├── article_scraper.py            # 記事スクレイピングスクリプト
+├── send_email.py                 # メール送信スクリプト
 ├── requirements.txt              # Python依存パッケージ
 ├── .github/
 │   └── workflows/
