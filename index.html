@@ -3,137 +3,523 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>東京→地方移住マッチング</title>
+    <title>東京→地方移住マッチング | 理想の移住パートナーを見つけよう</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #50c878;
-            --background-color: #f8f9fa;
+            --primary-color: #ff6b9d;
+            --secondary-color: #c06c84;
+            --accent-color: #f67280;
+            --dark-color: #355c7d;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--background-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding-bottom: 80px;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 60px 0;
-            margin-bottom: 40px;
+        /* Header */
+        .app-header {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .hero-section h1 {
-            font-size: 2.5rem;
+        .app-logo {
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .hero-section p {
-            font-size: 1.2rem;
-            opacity: 0.95;
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .bottom-nav .nav-item {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.3s;
+        }
+
+        .bottom-nav .nav-item:hover {
+            background: var(--light-bg);
+        }
+
+        .bottom-nav .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .bottom-nav .nav-item i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .bottom-nav .nav-item span {
+            font-size: 0.75rem;
+            display: block;
+        }
+
+        /* Card Stack */
+        .card-stack-container {
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 0 20px;
+            position: relative;
+            height: 600px;
         }
 
         .profile-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 20px;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
             overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: grab;
         }
 
-        .profile-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        .profile-card:active {
+            cursor: grabbing;
         }
 
-        .profile-card-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 20px;
+        .profile-card.swiped-left {
+            transform: translateX(-150%) rotate(-30deg);
+            opacity: 0;
         }
 
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: white;
+        .profile-card.swiped-right {
+            transform: translateX(150%) rotate(30deg);
+            opacity: 0;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 10px;
+            position: relative;
         }
 
-        .badge-custom {
-            background-color: rgba(255, 255, 255, 0.3);
+        .card-image i {
+            font-size: 8rem;
             color: white;
-            padding: 5px 12px;
+            opacity: 0.8;
+        }
+
+        .card-badges {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .card-badge {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--dark-color);
+            padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.85rem;
-            margin-right: 5px;
-            display: inline-block;
-            margin-top: 5px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
         }
 
-        .filter-section {
+        .card-info {
+            padding: 25px;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--dark-color);
+        }
+
+        .card-subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .card-tag {
+            background: #f0f0f0;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .card-bio {
+            color: #444;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 0 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.skip {
+            background: white;
+            color: #999;
+        }
+
+        .action-btn.like {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            width: 70px;
+            height: 70px;
+            font-size: 2rem;
+        }
+
+        .action-btn.super-like {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* Matches Grid */
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .match-card {
             background: white;
             border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .btn-primary-custom {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
-            font-weight: 600;
-            transition: transform 0.2s ease;
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
         }
 
-        .btn-primary-custom:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+        .match-avatar {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .form-control, .form-select {
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-            padding: 10px 15px;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
-        }
-
-        .modal-content {
-            border-radius: 15px;
-            border: none;
-        }
-
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        .match-avatar i {
+            font-size: 4rem;
             color: white;
-            border-radius: 15px 15px 0 0;
+            opacity: 0.8;
         }
 
-        .info-tag {
-            background-color: #e3f2fd;
-            color: var(--primary-color);
-            padding: 8px 15px;
-            border-radius: 20px;
-            display: inline-block;
-            margin: 5px;
+        .match-info {
+            padding: 15px;
+        }
+
+        .match-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+
+        .match-destination {
+            color: #666;
             font-size: 0.9rem;
         }
 
+        .new-match-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        /* Messages */
+        .message-list {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .message-item {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .message-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transform: translateX(5px);
+        }
+
+        .message-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message-avatar i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .message-name {
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+        .message-time {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        .message-preview {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .unread-badge {
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        /* Pricing Modal */
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            margin: 20px;
+        }
+
+        .pricing-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .pricing-amount {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .pricing-amount span {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .pricing-features {
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .pricing-feature {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pricing-feature i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .btn-subscribe {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+        }
+
+        .btn-subscribe:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4);
+        }
+
+        /* Profile Page */
+        .profile-page {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .profile-avatar-large i {
+            font-size: 4rem;
+            color: white;
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 15px;
+        }
+
+        .profile-section-title {
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .profile-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .profile-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .profile-info-label {
+            color: #666;
+        }
+
+        .profile-info-value {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -143,282 +529,291 @@
         .empty-state i {
             font-size: 4rem;
             margin-bottom: 20px;
+            opacity: 0.5;
         }
 
-        .tab-navigation {
-            margin-bottom: 30px;
-        }
-
-        .nav-tabs .nav-link {
-            border-radius: 10px 10px 0 0;
+        .empty-state h3 {
+            margin-bottom: 10px;
             color: #666;
-            font-weight: 600;
-            border: none;
-            margin-right: 5px;
         }
 
-        .nav-tabs .nav-link.active {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        /* Modal */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             color: white;
+            border-radius: 20px 20px 0 0;
+            border: none;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px 20px 0 0;
+            box-shadow: var(--card-shadow);
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-message.sent {
+            flex-direction: row-reverse;
+        }
+
+        .chat-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            background: #f0f0f0;
+        }
+
+        .chat-message.sent .chat-bubble {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+        }
+
+        .chat-input-container {
+            padding: 15px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 2px solid #f0f0f0;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .chat-send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hide all views initially */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Premium Badge */
+        .premium-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
         }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
-    <div class="hero-section">
+    <!-- Header -->
+    <div class="app-header">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1><i class="bi bi-geo-alt-fill"></i> 東京→地方移住マッチング</h1>
-                    <p>東京から地方へ。新しい生活を一緒に始める仲間を見つけよう。</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="app-logo">
+                    <i class="bi bi-heart-fill"></i> 移住マッチ
                 </div>
-                <div class="col-lg-4 text-end">
-                    <button class="btn btn-light btn-lg" data-bs-toggle="modal" data-bs-target="#registerModal">
-                        <i class="bi bi-person-plus-fill"></i> プロフィール登録
-                    </button>
-                </div>
+                <button class="btn btn-sm" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; border-radius: 20px;" data-bs-toggle="modal" data-bs-target="#pricingModal">
+                    <i class="bi bi-star-fill"></i> プレミアム
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="container">
-        <!-- Tab Navigation -->
-        <ul class="nav nav-tabs tab-navigation" id="mainTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="browse-tab" data-bs-toggle="tab" data-bs-target="#browse" type="button" role="tab">
-                    <i class="bi bi-grid-3x3-gap-fill"></i> プロフィール一覧
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="my-profile-tab" data-bs-toggle="tab" data-bs-target="#my-profile" type="button" role="tab">
-                    <i class="bi bi-person-circle"></i> マイプロフィール
-                </button>
-            </li>
-        </ul>
-
-        <!-- Tab Content -->
-        <div class="tab-content" id="mainTabContent">
-            <!-- Browse Profiles Tab -->
-            <div class="tab-pane fade show active" id="browse" role="tabpanel">
-                <!-- Filter Section -->
-                <div class="filter-section">
-                    <h5 class="mb-3"><i class="bi bi-funnel-fill"></i> フィルター</h5>
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <select class="form-select" id="filterDestination">
-                                <option value="">希望移住先（全て）</option>
-                                <option value="北海道">北海道</option>
-                                <option value="青森県">青森県</option>
-                                <option value="岩手県">岩手県</option>
-                                <option value="宮城県">宮城県</option>
-                                <option value="秋田県">秋田県</option>
-                                <option value="山形県">山形県</option>
-                                <option value="福島県">福島県</option>
-                                <option value="茨城県">茨城県</option>
-                                <option value="栃木県">栃木県</option>
-                                <option value="群馬県">群馬県</option>
-                                <option value="埼玉県">埼玉県</option>
-                                <option value="千葉県">千葉県</option>
-                                <option value="神奈川県">神奈川県</option>
-                                <option value="新潟県">新潟県</option>
-                                <option value="富山県">富山県</option>
-                                <option value="石川県">石川県</option>
-                                <option value="福井県">福井県</option>
-                                <option value="山梨県">山梨県</option>
-                                <option value="長野県">長野県</option>
-                                <option value="岐阜県">岐阜県</option>
-                                <option value="静岡県">静岡県</option>
-                                <option value="愛知県">愛知県</option>
-                                <option value="三重県">三重県</option>
-                                <option value="滋賀県">滋賀県</option>
-                                <option value="京都府">京都府</option>
-                                <option value="大阪府">大阪府</option>
-                                <option value="兵庫県">兵庫県</option>
-                                <option value="奈良県">奈良県</option>
-                                <option value="和歌山県">和歌山県</option>
-                                <option value="鳥取県">鳥取県</option>
-                                <option value="島根県">島根県</option>
-                                <option value="岡山県">岡山県</option>
-                                <option value="広島県">広島県</option>
-                                <option value="山口県">山口県</option>
-                                <option value="徳島県">徳島県</option>
-                                <option value="香川県">香川県</option>
-                                <option value="愛媛県">愛媛県</option>
-                                <option value="高知県">高知県</option>
-                                <option value="福岡県">福岡県</option>
-                                <option value="佐賀県">佐賀県</option>
-                                <option value="長崎県">長崎県</option>
-                                <option value="熊本県">熊本県</option>
-                                <option value="大分県">大分県</option>
-                                <option value="宮崎県">宮崎県</option>
-                                <option value="鹿児島県">鹿児島県</option>
-                                <option value="沖縄県">沖縄県</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-select" id="filterGender">
-                                <option value="">性別（全て）</option>
-                                <option value="男性">男性</option>
-                                <option value="女性">女性</option>
-                                <option value="その他">その他</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-select" id="filterTiming">
-                                <option value="">移住時期（全て）</option>
-                                <option value="半年以内">半年以内</option>
-                                <option value="1年以内">1年以内</option>
-                                <option value="2-3年以内">2-3年以内</option>
-                                <option value="未定">未定</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-primary-custom w-100" onclick="applyFilters()">
-                                <i class="bi bi-search"></i> 検索
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Profile List -->
-                <div id="profileList" class="row"></div>
+    <div id="mainContent">
+        <!-- Home View (Card Stack) -->
+        <div class="view active" id="homeView">
+            <div class="card-stack-container" id="cardStack">
+                <!-- Cards will be dynamically inserted here -->
             </div>
+            <div class="action-buttons">
+                <button class="action-btn skip" onclick="skipCard()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <button class="action-btn super-like" onclick="superLike()">
+                    <i class="bi bi-star-fill"></i>
+                </button>
+                <button class="action-btn like" onclick="likeCard()">
+                    <i class="bi bi-heart-fill"></i>
+                </button>
+            </div>
+        </div>
 
-            <!-- My Profile Tab -->
-            <div class="tab-pane fade" id="my-profile" role="tabpanel">
-                <div class="filter-section">
-                    <div id="myProfileDisplay"></div>
-                </div>
+        <!-- Matches View -->
+        <div class="view" id="matchesView">
+            <div class="matches-grid" id="matchesGrid">
+                <!-- Matches will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Messages View -->
+        <div class="view" id="messagesView">
+            <div class="message-list" id="messageList">
+                <!-- Messages will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Profile View -->
+        <div class="view" id="profileView">
+            <div class="profile-page" id="profilePage">
+                <!-- Profile will be dynamically inserted here -->
             </div>
         </div>
     </div>
 
-    <!-- Registration Modal -->
-    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="d-flex">
+            <div class="nav-item active" onclick="switchView('home')">
+                <i class="bi bi-house-fill"></i>
+                <span>ホーム</span>
+            </div>
+            <div class="nav-item" onclick="switchView('matches')">
+                <i class="bi bi-heart-fill"></i>
+                <span>マッチ</span>
+            </div>
+            <div class="nav-item" onclick="switchView('messages')">
+                <i class="bi bi-chat-fill"></i>
+                <span>メッセージ</span>
+            </div>
+            <div class="nav-item" onclick="switchView('profile')">
+                <i class="bi bi-person-fill"></i>
+                <span>プロフィール</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Modal -->
+    <div class="modal fade" id="pricingModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="registerModalLabel">
-                        <i class="bi bi-person-plus-fill"></i> プロフィール登録
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title"><i class="bi bi-star-fill"></i> プレミアムプラン</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="registerForm">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="name" class="form-label">ニックネーム *</label>
-                                <input type="text" class="form-control" id="name" required>
+                    <div class="pricing-card" style="margin: 0;">
+                        <div class="pricing-badge">人気No.1</div>
+                        <div class="pricing-amount">
+                            ¥3,000<span>/月</span>
+                        </div>
+                        <p style="color: #666; margin-bottom: 30px;">真剣な出会いをサポート</p>
+
+                        <div class="pricing-features">
+                            <div class="pricing-feature">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>無制限のいいね</span>
                             </div>
-                            <div class="col-md-3">
-                                <label for="age" class="form-label">年齢 *</label>
-                                <input type="number" class="form-control" id="age" min="18" max="100" required>
+                            <div class="pricing-feature">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>既読機能</span>
                             </div>
-                            <div class="col-md-3">
-                                <label for="gender" class="form-label">性別 *</label>
-                                <select class="form-select" id="gender" required>
-                                    <option value="">選択してください</option>
-                                    <option value="男性">男性</option>
-                                    <option value="女性">女性</option>
-                                    <option value="その他">その他</option>
-                                </select>
+                            <div class="pricing-feature">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>相手のいいねが見れる</span>
                             </div>
-                            <div class="col-md-6">
-                                <label for="occupation" class="form-label">現在の職業 *</label>
-                                <input type="text" class="form-control" id="occupation" required>
+                            <div class="pricing-feature">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>メッセージ優先表示</span>
                             </div>
-                            <div class="col-md-6">
-                                <label for="destination" class="form-label">希望移住先 *</label>
-                                <select class="form-select" id="destination" required>
-                                    <option value="">選択してください</option>
-                                    <option value="北海道">北海道</option>
-                                    <option value="青森県">青森県</option>
-                                    <option value="岩手県">岩手県</option>
-                                    <option value="宮城県">宮城県</option>
-                                    <option value="秋田県">秋田県</option>
-                                    <option value="山形県">山形県</option>
-                                    <option value="福島県">福島県</option>
-                                    <option value="茨城県">茨城県</option>
-                                    <option value="栃木県">栃木県</option>
-                                    <option value="群馬県">群馬県</option>
-                                    <option value="埼玉県">埼玉県</option>
-                                    <option value="千葉県">千葉県</option>
-                                    <option value="神奈川県">神奈川県</option>
-                                    <option value="新潟県">新潟県</option>
-                                    <option value="富山県">富山県</option>
-                                    <option value="石川県">石川県</option>
-                                    <option value="福井県">福井県</option>
-                                    <option value="山梨県">山梨県</option>
-                                    <option value="長野県">長野県</option>
-                                    <option value="岐阜県">岐阜県</option>
-                                    <option value="静岡県">静岡県</option>
-                                    <option value="愛知県">愛知県</option>
-                                    <option value="三重県">三重県</option>
-                                    <option value="滋賀県">滋賀県</option>
-                                    <option value="京都府">京都府</option>
-                                    <option value="大阪府">大阪府</option>
-                                    <option value="兵庫県">兵庫県</option>
-                                    <option value="奈良県">奈良県</option>
-                                    <option value="和歌山県">和歌山県</option>
-                                    <option value="鳥取県">鳥取県</option>
-                                    <option value="島根県">島根県</option>
-                                    <option value="岡山県">岡山県</option>
-                                    <option value="広島県">広島県</option>
-                                    <option value="山口県">山口県</option>
-                                    <option value="徳島県">徳島県</option>
-                                    <option value="香川県">香川県</option>
-                                    <option value="愛媛県">愛媛県</option>
-                                    <option value="高知県">高知県</option>
-                                    <option value="福岡県">福岡県</option>
-                                    <option value="佐賀県">佐賀県</option>
-                                    <option value="長崎県">長崎県</option>
-                                    <option value="熊本県">熊本県</option>
-                                    <option value="大分県">大分県</option>
-                                    <option value="宮崎県">宮崎県</option>
-                                    <option value="鹿児島県">鹿児島県</option>
-                                    <option value="沖縄県">沖縄県</option>
-                                </select>
+                            <div class="pricing-feature">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>足跡機能</span>
                             </div>
-                            <div class="col-md-6">
-                                <label for="timing" class="form-label">移住希望時期 *</label>
-                                <select class="form-select" id="timing" required>
-                                    <option value="">選択してください</option>
-                                    <option value="半年以内">半年以内</option>
-                                    <option value="1年以内">1年以内</option>
-                                    <option value="2-3年以内">2-3年以内</option>
-                                    <option value="未定">未定</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="hobbies" class="form-label">趣味・興味</label>
-                                <input type="text" class="form-control" id="hobbies" placeholder="例: 登山、釣り、カフェ巡り">
-                            </div>
-                            <div class="col-12">
-                                <label for="bio" class="form-label">自己紹介 *</label>
-                                <textarea class="form-control" id="bio" rows="4" required placeholder="移住を考えたきっかけや、どんな生活を送りたいかなど..."></textarea>
+                            <div class="pricing-feature">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>検索機能の拡張</span>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-                    <button type="button" class="btn btn-primary-custom" onclick="registerProfile()">登録する</button>
+
+                        <button class="btn-subscribe" onclick="subscribe()">
+                            今すぐ登録する
+                        </button>
+                        <p style="color: #999; font-size: 0.85rem; margin-top: 15px;">
+                            いつでもキャンセル可能
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Profile Detail Modal -->
-    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+    <!-- Chat Modal -->
+    <div class="modal fade" id="chatModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel">プロフィール詳細</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="detailModalBody">
-                    <!-- Dynamic content will be inserted here -->
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <div class="message-avatar" style="width: 45px; height: 45px;">
+                            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="message-name" id="chatUserName"></div>
+                            <div style="font-size: 0.85rem; color: #999;">オンライン</div>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Chat messages will be inserted here -->
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="メッセージを入力...">
+                        <button class="chat-send-btn" onclick="sendMessage()">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -426,356 +821,443 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sample data for demonstration
-        let profiles = [];
-        let myProfile = null;
+        // Data
+        let profiles = [
+            {
+                id: 1,
+                name: "田中 太郎",
+                age: 32,
+                gender: "男性",
+                occupation: "ITエンジニア",
+                destination: "長野県",
+                timing: "1年以内",
+                hobbies: "登山、キャンプ、写真撮影",
+                bio: "東京で10年働きましたが、自然豊かな環境で暮らしたいと思い長野への移住を考えています。リモートワークも可能なので、週末は山登りを楽しみたいです。"
+            },
+            {
+                id: 2,
+                name: "佐藤 花子",
+                age: 28,
+                gender: "女性",
+                occupation: "グラフィックデザイナー",
+                destination: "沖縄県",
+                timing: "半年以内",
+                hobbies: "ダイビング、ヨガ、カフェ巡り",
+                bio: "フリーランスとして活動しています。温暖な気候と海が好きで、沖縄での新生活に向けて準備中です。同じタイミングで移住する仲間がいたら嬉しいです！"
+            },
+            {
+                id: 3,
+                name: "鈴木 健",
+                age: 35,
+                gender: "男性",
+                occupation: "マーケティング",
+                destination: "北海道",
+                timing: "2-3年以内",
+                hobbies: "スキー、釣り、料理",
+                bio: "北海道の大自然に憧れています。食材も新鮮で美味しいものが多く、スキーも楽しめる環境に魅力を感じています。まずは下見旅行から始める予定です。"
+            },
+            {
+                id: 4,
+                name: "山田 美咲",
+                age: 30,
+                gender: "女性",
+                occupation: "ライター",
+                destination: "京都府",
+                timing: "1年以内",
+                hobbies: "茶道、寺社巡り、読書",
+                bio: "日本の伝統文化に興味があり、京都で落ち着いた生活を送りたいと思っています。フリーランスなので場所にとらわれない働き方ができます。"
+            },
+            {
+                id: 5,
+                name: "伊藤 誠",
+                age: 27,
+                gender: "男性",
+                occupation: "Webデザイナー",
+                destination: "長野県",
+                timing: "半年以内",
+                hobbies: "サイクリング、温泉、コーヒー",
+                bio: "自然とテクノロジーの両立ができる場所を探しています。長野は都心からのアクセスも良く、自然も豊かなので最適だと思っています。"
+            },
+            {
+                id: 6,
+                name: "高橋 愛",
+                age: 26,
+                gender: "女性",
+                occupation: "看護師",
+                destination: "福岡県",
+                timing: "1年以内",
+                hobbies: "ランニング、料理、旅行",
+                bio: "地元の福岡に戻って地域医療に貢献したいと思っています。都会の喧騒から離れて、ゆったりとした生活を送りたいです。"
+            },
+            {
+                id: 7,
+                name: "中村 大輔",
+                age: 29,
+                gender: "男性",
+                occupation: "建築士",
+                destination: "静岡県",
+                timing: "半年以内",
+                hobbies: "サーフィン、DIY、音楽",
+                bio: "海の近くで暮らすのが夢です。静岡は富士山も見えて、サーフィンも楽しめる最高の場所だと思っています。"
+            },
+            {
+                id: 8,
+                name: "小林 さくら",
+                age: 31,
+                gender: "女性",
+                occupation: "教師",
+                destination: "広島県",
+                timing: "2-3年以内",
+                hobbies: "読書、ガーデニング、映画鑑賞",
+                bio: "広島の教育現場で働きたいと考えています。自然豊かで歴史もある街で、子どもたちと一緒に成長したいです。"
+            }
+        ];
+
+        let currentCardIndex = 0;
+        let matches = [];
+        let likes = [];
+        let myProfile = {
+            name: "あなた",
+            age: 30,
+            gender: "未設定",
+            occupation: "未設定",
+            destination: "未設定",
+            timing: "未設定",
+            hobbies: "未設定",
+            bio: "プロフィールを設定してください"
+        };
 
         // Load data from localStorage
         function loadData() {
-            const savedProfiles = localStorage.getItem('tokyoRelocationProfiles');
-            const savedMyProfile = localStorage.getItem('tokyoRelocationMyProfile');
+            const savedMatches = localStorage.getItem('matches');
+            const savedLikes = localStorage.getItem('likes');
+            const savedProfile = localStorage.getItem('myProfile');
+            const savedIndex = localStorage.getItem('currentCardIndex');
 
-            if (savedProfiles) {
-                profiles = JSON.parse(savedProfiles);
-            } else {
-                // Add sample data
-                profiles = [
-                    {
-                        id: 1,
-                        name: "田中太郎",
-                        age: 32,
-                        gender: "男性",
-                        occupation: "ITエンジニア",
-                        destination: "長野県",
-                        timing: "1年以内",
-                        hobbies: "登山、キャンプ、写真撮影",
-                        bio: "東京で10年働きましたが、自然豊かな環境で暮らしたいと思い長野への移住を考えています。リモートワークも可能なので、週末は山登りを楽しみたいです。"
-                    },
-                    {
-                        id: 2,
-                        name: "佐藤花子",
-                        age: 28,
-                        gender: "女性",
-                        occupation: "グラフィックデザイナー",
-                        destination: "沖縄県",
-                        timing: "半年以内",
-                        hobbies: "ダイビング、ヨガ、カフェ巡り",
-                        bio: "フリーランスとして活動しています。温暖な気候と海が好きで、沖縄での新生活に向けて準備中です。同じタイミングで移住する仲間がいたら嬉しいです！"
-                    },
-                    {
-                        id: 3,
-                        name: "鈴木健",
-                        age: 35,
-                        gender: "男性",
-                        occupation: "マーケティング",
-                        destination: "北海道",
-                        timing: "2-3年以内",
-                        hobbies: "スキー、釣り、料理",
-                        bio: "北海道の大自然に憧れています。食材も新鮮で美味しいものが多く、スキーも楽しめる環境に魅力を感じています。まずは下見旅行から始める予定です。"
-                    },
-                    {
-                        id: 4,
-                        name: "山田美咲",
-                        age: 30,
-                        gender: "女性",
-                        occupation: "ライター",
-                        destination: "京都府",
-                        timing: "1年以内",
-                        hobbies: "茶道、寺社巡り、読書",
-                        bio: "日本の伝統文化に興味があり、京都で落ち着いた生活を送りたいと思っています。フリーランスなので場所にとらわれない働き方ができます。"
-                    },
-                    {
-                        id: 5,
-                        name: "伊藤誠",
-                        age: 27,
-                        gender: "男性",
-                        occupation: "Webデザイナー",
-                        destination: "長野県",
-                        timing: "半年以内",
-                        hobbies: "サイクリング、温泉、コーヒー",
-                        bio: "自然とテクノロジーの両立ができる場所を探しています。長野は都心からのアクセスも良く、自然も豊かなので最適だと思っています。"
-                    }
-                ];
-                saveProfiles();
-            }
-
-            if (savedMyProfile) {
-                myProfile = JSON.parse(savedMyProfile);
-            }
+            if (savedMatches) matches = JSON.parse(savedMatches);
+            if (savedLikes) likes = JSON.parse(savedLikes);
+            if (savedProfile) myProfile = JSON.parse(savedProfile);
+            if (savedIndex) currentCardIndex = parseInt(savedIndex);
         }
 
-        // Save data to localStorage
-        function saveProfiles() {
-            localStorage.setItem('tokyoRelocationProfiles', JSON.stringify(profiles));
+        function saveData() {
+            localStorage.setItem('matches', JSON.stringify(matches));
+            localStorage.setItem('likes', JSON.stringify(likes));
+            localStorage.setItem('myProfile', JSON.stringify(myProfile));
+            localStorage.setItem('currentCardIndex', currentCardIndex.toString());
         }
 
-        function saveMyProfile() {
-            localStorage.setItem('tokyoRelocationMyProfile', JSON.stringify(myProfile));
+        // Initialize app
+        function init() {
+            loadData();
+            renderCards();
+            renderMatches();
+            renderMessages();
+            renderProfile();
         }
 
-        // Display profiles
-        function displayProfiles(profilesToShow) {
-            const profileList = document.getElementById('profileList');
+        // Render card stack
+        function renderCards() {
+            const cardStack = document.getElementById('cardStack');
+            cardStack.innerHTML = '';
 
-            if (profilesToShow.length === 0) {
-                profileList.innerHTML = `
-                    <div class="col-12">
-                        <div class="empty-state">
-                            <i class="bi bi-person-x"></i>
-                            <h3>プロフィールが見つかりませんでした</h3>
-                            <p>フィルター条件を変更してみてください</p>
-                        </div>
+            if (currentCardIndex >= profiles.length) {
+                cardStack.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <h3>新しいプロフィールがありません</h3>
+                        <p>後ほど新しい方が追加されます</p>
                     </div>
                 `;
                 return;
             }
 
-            profileList.innerHTML = profilesToShow.map(profile => `
-                <div class="col-md-6 col-lg-4">
-                    <div class="card profile-card">
-                        <div class="profile-card-header text-center">
-                            <div class="profile-avatar mx-auto">
-                                <i class="bi bi-person-fill"></i>
-                            </div>
-                            <h5 class="mb-1">${profile.name}</h5>
-                            <p class="mb-2">${profile.age}歳 / ${profile.gender}</p>
-                            <span class="badge-custom">
-                                <i class="bi bi-geo-alt-fill"></i> ${profile.destination}
-                            </span>
-                            <span class="badge-custom">
-                                <i class="bi bi-calendar-event"></i> ${profile.timing}
-                            </span>
+            // Show next 3 cards
+            for (let i = Math.min(currentCardIndex + 2, profiles.length - 1); i >= currentCardIndex; i--) {
+                const profile = profiles[i];
+                const zIndex = profiles.length - i;
+                const scale = 1 - (i - currentCardIndex) * 0.05;
+                const translateY = (i - currentCardIndex) * 10;
+
+                const card = document.createElement('div');
+                card.className = 'profile-card';
+                card.style.zIndex = zIndex;
+                card.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+                card.innerHTML = `
+                    <div class="card-image">
+                        <div class="card-badges">
+                            <span class="card-badge"><i class="bi bi-geo-alt-fill"></i> ${profile.destination}</span>
+                            <span class="card-badge"><i class="bi bi-calendar-event"></i> ${profile.timing}</span>
                         </div>
-                        <div class="card-body">
-                            <p class="mb-2"><strong><i class="bi bi-briefcase-fill"></i> 職業:</strong> ${profile.occupation}</p>
-                            <p class="mb-2"><strong><i class="bi bi-heart-fill"></i> 趣味:</strong> ${profile.hobbies || '未設定'}</p>
-                            <p class="text-muted small">${profile.bio.substring(0, 80)}...</p>
-                            <button class="btn btn-primary-custom w-100 mt-2" onclick="showDetail(${profile.id})">
-                                詳細を見る
-                            </button>
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-title">${profile.name}</div>
+                        <div class="card-subtitle">${profile.age}歳 • ${profile.occupation}</div>
+                        <div class="card-tags">
+                            ${profile.hobbies.split('、').map(h => `<span class="card-tag">${h}</span>`).join('')}
                         </div>
+                        <div class="card-bio">${profile.bio}</div>
+                    </div>
+                `;
+                cardStack.appendChild(card);
+            }
+        }
+
+        // Card actions
+        function likeCard() {
+            if (currentCardIndex >= profiles.length) return;
+
+            const card = document.querySelector('.profile-card');
+            card.classList.add('swiped-right');
+
+            const profile = profiles[currentCardIndex];
+            likes.push(profile.id);
+
+            // 50% chance of matching
+            if (Math.random() > 0.5) {
+                matches.push(profile);
+                showMatchAnimation(profile);
+            }
+
+            setTimeout(() => {
+                currentCardIndex++;
+                saveData();
+                renderCards();
+            }, 300);
+        }
+
+        function skipCard() {
+            if (currentCardIndex >= profiles.length) return;
+
+            const card = document.querySelector('.profile-card');
+            card.classList.add('swiped-left');
+
+            setTimeout(() => {
+                currentCardIndex++;
+                saveData();
+                renderCards();
+            }, 300);
+        }
+
+        function superLike() {
+            alert('スーパーライクはプレミアムプラン限定の機能です！');
+        }
+
+        // Show match animation
+        function showMatchAnimation(profile) {
+            alert(`🎉 マッチしました！\n${profile.name}さんとマッチングしました！`);
+            renderMatches();
+            renderMessages();
+        }
+
+        // Render matches
+        function renderMatches() {
+            const matchesGrid = document.getElementById('matchesGrid');
+
+            if (matches.length === 0) {
+                matchesGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <i class="bi bi-heart"></i>
+                        <h3>まだマッチがありません</h3>
+                        <p>いいねを送ってマッチングしましょう</p>
+                    </div>
+                `;
+                return;
+            }
+
+            matchesGrid.innerHTML = matches.map(profile => `
+                <div class="match-card" onclick="openChat(${profile.id})">
+                    <div class="match-avatar">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="match-info">
+                        <div class="match-name">${profile.name}</div>
+                        <div class="match-destination">
+                            <i class="bi bi-geo-alt-fill"></i> ${profile.destination}
+                        </div>
+                        <span class="new-match-badge">NEW</span>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Display my profile
-        function displayMyProfile() {
-            const myProfileDisplay = document.getElementById('myProfileDisplay');
+        // Render messages
+        function renderMessages() {
+            const messageList = document.getElementById('messageList');
 
-            if (!myProfile) {
-                myProfileDisplay.innerHTML = `
+            if (matches.length === 0) {
+                messageList.innerHTML = `
                     <div class="empty-state">
-                        <i class="bi bi-person-plus"></i>
-                        <h3>プロフィールが未登録です</h3>
-                        <p>まずはプロフィールを登録しましょう</p>
-                        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#registerModal">
-                            <i class="bi bi-person-plus-fill"></i> プロフィール登録
-                        </button>
+                        <i class="bi bi-chat"></i>
+                        <h3>メッセージがありません</h3>
+                        <p>マッチした人とメッセージを始めましょう</p>
                     </div>
                 `;
                 return;
             }
 
-            myProfileDisplay.innerHTML = `
-                <div class="text-center mb-4">
-                    <div class="profile-avatar mx-auto" style="width: 120px; height: 120px; font-size: 3rem; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white;">
+            messageList.innerHTML = matches.map((profile, index) => `
+                <div class="message-item" onclick="openChat(${profile.id})">
+                    <div class="message-avatar">
                         <i class="bi bi-person-fill"></i>
                     </div>
-                    <h3 class="mt-3">${myProfile.name}</h3>
-                    <p class="text-muted">${myProfile.age}歳 / ${myProfile.gender}</p>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-name">${profile.name}</span>
+                            <span class="message-time">1時間前</span>
+                        </div>
+                        <div class="message-preview">
+                            よろしくお願いします！${profile.destination}への移住、楽しみですね😊
+                        </div>
+                    </div>
+                    ${index === 0 ? '<div class="unread-badge"></div>' : ''}
                 </div>
-
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-briefcase-fill"></i> 職業:</strong> ${myProfile.occupation}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-geo-alt-fill"></i> 希望移住先:</strong> ${myProfile.destination}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-calendar-event"></i> 移住時期:</strong> ${myProfile.timing}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-heart-fill"></i> 趣味:</strong> ${myProfile.hobbies || '未設定'}
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-chat-left-text-fill"></i> 自己紹介:</strong><br>
-                            ${myProfile.bio}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center mt-4">
-                    <button class="btn btn-primary-custom" onclick="editProfile()">
-                        <i class="bi bi-pencil-fill"></i> プロフィールを編集
-                    </button>
-                    <button class="btn btn-outline-danger ms-2" onclick="deleteProfile()">
-                        <i class="bi bi-trash-fill"></i> プロフィールを削除
-                    </button>
-                </div>
-            `;
+            `).join('');
         }
 
-        // Register profile
-        function registerProfile() {
-            const form = document.getElementById('registerForm');
+        // Open chat
+        function openChat(profileId) {
+            const profile = profiles.find(p => p.id === profileId);
+            document.getElementById('chatUserName').textContent = profile.name;
 
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = `
+                <div class="chat-message">
+                    <div class="chat-bubble">
+                        はじめまして！${profile.name}です。${profile.destination}への移住を考えています。
+                    </div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-bubble">
+                        ${profile.bio}
+                    </div>
+                </div>
+                <div class="chat-message sent">
+                    <div class="chat-bubble">
+                        こんにちは！よろしくお願いします😊
+                    </div>
+                </div>
+            `;
 
-            const newProfile = {
-                id: myProfile ? myProfile.id : Date.now(),
-                name: document.getElementById('name').value,
-                age: parseInt(document.getElementById('age').value),
-                gender: document.getElementById('gender').value,
-                occupation: document.getElementById('occupation').value,
-                destination: document.getElementById('destination').value,
-                timing: document.getElementById('timing').value,
-                hobbies: document.getElementById('hobbies').value,
-                bio: document.getElementById('bio').value
-            };
+            new bootstrap.Modal(document.getElementById('chatModal')).show();
+        }
 
-            myProfile = newProfile;
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
 
-            // Update in profiles list
-            const existingIndex = profiles.findIndex(p => p.id === myProfile.id);
-            if (existingIndex >= 0) {
-                profiles[existingIndex] = myProfile;
-            } else {
-                profiles.push(myProfile);
-            }
+            if (!message) return;
 
-            saveProfiles();
-            saveMyProfile();
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message sent';
+            messageDiv.innerHTML = `<div class="chat-bubble">${message}</div>`;
+            chatMessages.appendChild(messageDiv);
 
-            // Close modal and refresh
-            bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
-            form.reset();
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
-            displayProfiles(profiles);
-            displayMyProfile();
+        // Render profile
+        function renderProfile() {
+            const profilePage = document.getElementById('profilePage');
+            profilePage.innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-avatar-large">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <h3>${myProfile.name}</h3>
+                    <p style="color: #666;">${myProfile.age}歳 • ${myProfile.gender}</p>
+                    <button class="btn btn-outline-secondary mt-3" onclick="editProfile()">
+                        <i class="bi bi-pencil-fill"></i> プロフィールを編集
+                    </button>
+                </div>
 
-            alert('プロフィールを登録しました！');
+                <div class="profile-section">
+                    <div class="profile-section-title">基本情報</div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">職業</span>
+                        <span class="profile-info-value">${myProfile.occupation}</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">希望移住先</span>
+                        <span class="profile-info-value">${myProfile.destination}</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">移住時期</span>
+                        <span class="profile-info-value">${myProfile.timing}</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">趣味</span>
+                        <span class="profile-info-value">${myProfile.hobbies}</span>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="profile-section-title">自己紹介</div>
+                    <p style="color: #666; line-height: 1.6;">${myProfile.bio}</p>
+                </div>
+
+                <div class="profile-section">
+                    <div class="profile-section-title">設定</div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">通知設定</span>
+                        <span class="profile-info-value"><i class="bi bi-chevron-right"></i></span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">プライバシー</span>
+                        <span class="profile-info-value"><i class="bi bi-chevron-right"></i></span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">ヘルプ</span>
+                        <span class="profile-info-value"><i class="bi bi-chevron-right"></i></span>
+                    </div>
+                </div>
+            `;
         }
 
         // Edit profile
         function editProfile() {
-            if (!myProfile) return;
-
-            document.getElementById('name').value = myProfile.name;
-            document.getElementById('age').value = myProfile.age;
-            document.getElementById('gender').value = myProfile.gender;
-            document.getElementById('occupation').value = myProfile.occupation;
-            document.getElementById('destination').value = myProfile.destination;
-            document.getElementById('timing').value = myProfile.timing;
-            document.getElementById('hobbies').value = myProfile.hobbies || '';
-            document.getElementById('bio').value = myProfile.bio;
-
-            new bootstrap.Modal(document.getElementById('registerModal')).show();
+            alert('プロフィール編集画面（POCのため簡易版）\n\n実際のアプリでは詳細な編集フォームが表示されます。');
         }
 
-        // Delete profile
-        function deleteProfile() {
-            if (!confirm('プロフィールを削除してもよろしいですか？')) return;
-
-            profiles = profiles.filter(p => p.id !== myProfile.id);
-            myProfile = null;
-
-            saveProfiles();
-            localStorage.removeItem('tokyoRelocationMyProfile');
-
-            displayProfiles(profiles);
-            displayMyProfile();
-
-            alert('プロフィールを削除しました');
+        // Subscribe
+        function subscribe() {
+            alert('決済画面へ遷移します\n\n月額3,000円のプレミアムプランに登録できます。\n（POCのため実際の決済は行われません）');
         }
 
-        // Show profile detail
-        function showDetail(profileId) {
-            const profile = profiles.find(p => p.id === profileId);
-            if (!profile) return;
-
-            const detailBody = document.getElementById('detailModalBody');
-            detailBody.innerHTML = `
-                <div class="text-center mb-4">
-                    <div class="profile-avatar mx-auto" style="width: 120px; height: 120px; font-size: 3rem; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white;">
-                        <i class="bi bi-person-fill"></i>
-                    </div>
-                    <h3 class="mt-3">${profile.name}</h3>
-                    <p class="text-muted">${profile.age}歳 / ${profile.gender}</p>
-                </div>
-
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-briefcase-fill"></i> 職業:</strong> ${profile.occupation}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-geo-alt-fill"></i> 希望移住先:</strong> ${profile.destination}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-calendar-event"></i> 移住時期:</strong> ${profile.timing}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-heart-fill"></i> 趣味:</strong> ${profile.hobbies || '未設定'}
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="info-tag w-100">
-                            <strong><i class="bi bi-chat-left-text-fill"></i> 自己紹介:</strong><br>
-                            ${profile.bio}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            new bootstrap.Modal(document.getElementById('detailModal')).show();
-        }
-
-        // Apply filters
-        function applyFilters() {
-            const destination = document.getElementById('filterDestination').value;
-            const gender = document.getElementById('filterGender').value;
-            const timing = document.getElementById('filterTiming').value;
-
-            let filtered = profiles.filter(profile => {
-                if (destination && profile.destination !== destination) return false;
-                if (gender && profile.gender !== gender) return false;
-                if (timing && profile.timing !== timing) return false;
-                return true;
+        // Switch view
+        function switchView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active');
             });
 
-            displayProfiles(filtered);
+            // Show selected view
+            document.getElementById(viewName + 'View').classList.add('active');
+
+            // Update nav items
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
         }
 
-        // Initialize app
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Handle Enter key in chat
         document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-            displayProfiles(profiles);
-            displayMyProfile();
-
-            // Tab change event
-            document.getElementById('my-profile-tab').addEventListener('shown.bs.tab', function() {
-                displayMyProfile();
-            });
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
         });
     </script>
 </body>
