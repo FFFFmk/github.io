@@ -1,74 +1,782 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-	<meta charset="UTF-8">
-	<title>ダメ人間のFX奮闘記</title>
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-	<!-- Custom styles for this template -->
-	<style>
-		.container {
-			margin-top: 50px;
-		}
-		h1 {
-			margin-bottom: 30px;
-		}
-		.post {
-			margin-bottom: 50px;
-		}
-		.post-title {
-			font-size: 24px;
-			margin-bottom: 10px;
-		}
-		.post-date {
-			font-size: 14px;
-			margin-bottom: 20px;
-			color: #888;
-		}
-		.post-body {
-			font-size: 16px;
-			line-height: 1.5;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>東京→地方移住マッチング</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50c878;
+            --background-color: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--background-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .profile-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .badge-custom {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 5px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 10px 15px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .info-tag {
+            background-color: #e3f2fd;
+            color: var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 5px;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .tab-navigation {
+            margin-bottom: 30px;
+        }
+
+        .nav-tabs .nav-link {
+            border-radius: 10px 10px 0 0;
+            color: #666;
+            font-weight: 600;
+            border: none;
+            margin-right: 5px;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+    </style>
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a class="navbar-brand" href="#">ダメ人間のFX奮闘記</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav">
-				<li class="nav-item active">
-					<a class="nav-link" href="#">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Blog</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">About</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Contact</a>
-				</li>
-			</ul>
-		</div>
-	</nav>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1><i class="bi bi-geo-alt-fill"></i> 東京→地方移住マッチング</h1>
+                    <p>東京から地方へ。新しい生活を一緒に始める仲間を見つけよう。</p>
+                </div>
+                <div class="col-lg-4 text-end">
+                    <button class="btn btn-light btn-lg" data-bs-toggle="modal" data-bs-target="#registerModal">
+                        <i class="bi bi-person-plus-fill"></i> プロフィール登録
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="container">
-		<h1>ダメ人間のFX奮闘記</h1>
-		
-		<!-- Blog Post 1 -->
-		<div class="post">
-			<h2 class="post-title">FX初心者が独学で勝つための方法</h2>
-			<p class="post-date">2023年4月1日</p>
-			<p class="post-body">FXは初めてで、どこから始めたらいいかわからないという人が多いと思います。私もそうでした。しかし、ここで紹介する方法を実践することで、FX初心者でも勝てるようになります。</p>
-			<a href="#" class="btn btn-primary">続きを読む</a>
-		</div>
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs tab-navigation" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="browse-tab" data-bs-toggle="tab" data-bs-target="#browse" type="button" role="tab">
+                    <i class="bi bi-grid-3x3-gap-fill"></i> プロフィール一覧
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="my-profile-tab" data-bs-toggle="tab" data-bs-target="#my-profile" type="button" role="tab">
+                    <i class="bi bi-person-circle"></i> マイプロフィール
+                </button>
+            </li>
+        </ul>
 
-		<!-- Blog Post 2 -->
-		<div class="post">
-			<h2 class="post-title">相場が不安定でも稼ぐ方法</h2>
-			<p class="post-date">2023年3月28日</p>
-			<p class="post-body">相場が不安定になると、多くの投資家が損
+        <!-- Tab Content -->
+        <div class="tab-content" id="mainTabContent">
+            <!-- Browse Profiles Tab -->
+            <div class="tab-pane fade show active" id="browse" role="tabpanel">
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <h5 class="mb-3"><i class="bi bi-funnel-fill"></i> フィルター</h5>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterDestination">
+                                <option value="">希望移住先（全て）</option>
+                                <option value="北海道">北海道</option>
+                                <option value="青森県">青森県</option>
+                                <option value="岩手県">岩手県</option>
+                                <option value="宮城県">宮城県</option>
+                                <option value="秋田県">秋田県</option>
+                                <option value="山形県">山形県</option>
+                                <option value="福島県">福島県</option>
+                                <option value="茨城県">茨城県</option>
+                                <option value="栃木県">栃木県</option>
+                                <option value="群馬県">群馬県</option>
+                                <option value="埼玉県">埼玉県</option>
+                                <option value="千葉県">千葉県</option>
+                                <option value="神奈川県">神奈川県</option>
+                                <option value="新潟県">新潟県</option>
+                                <option value="富山県">富山県</option>
+                                <option value="石川県">石川県</option>
+                                <option value="福井県">福井県</option>
+                                <option value="山梨県">山梨県</option>
+                                <option value="長野県">長野県</option>
+                                <option value="岐阜県">岐阜県</option>
+                                <option value="静岡県">静岡県</option>
+                                <option value="愛知県">愛知県</option>
+                                <option value="三重県">三重県</option>
+                                <option value="滋賀県">滋賀県</option>
+                                <option value="京都府">京都府</option>
+                                <option value="大阪府">大阪府</option>
+                                <option value="兵庫県">兵庫県</option>
+                                <option value="奈良県">奈良県</option>
+                                <option value="和歌山県">和歌山県</option>
+                                <option value="鳥取県">鳥取県</option>
+                                <option value="島根県">島根県</option>
+                                <option value="岡山県">岡山県</option>
+                                <option value="広島県">広島県</option>
+                                <option value="山口県">山口県</option>
+                                <option value="徳島県">徳島県</option>
+                                <option value="香川県">香川県</option>
+                                <option value="愛媛県">愛媛県</option>
+                                <option value="高知県">高知県</option>
+                                <option value="福岡県">福岡県</option>
+                                <option value="佐賀県">佐賀県</option>
+                                <option value="長崎県">長崎県</option>
+                                <option value="熊本県">熊本県</option>
+                                <option value="大分県">大分県</option>
+                                <option value="宮崎県">宮崎県</option>
+                                <option value="鹿児島県">鹿児島県</option>
+                                <option value="沖縄県">沖縄県</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterGender">
+                                <option value="">性別（全て）</option>
+                                <option value="男性">男性</option>
+                                <option value="女性">女性</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterTiming">
+                                <option value="">移住時期（全て）</option>
+                                <option value="半年以内">半年以内</option>
+                                <option value="1年以内">1年以内</option>
+                                <option value="2-3年以内">2-3年以内</option>
+                                <option value="未定">未定</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary-custom w-100" onclick="applyFilters()">
+                                <i class="bi bi-search"></i> 検索
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Profile List -->
+                <div id="profileList" class="row"></div>
+            </div>
+
+            <!-- My Profile Tab -->
+            <div class="tab-pane fade" id="my-profile" role="tabpanel">
+                <div class="filter-section">
+                    <div id="myProfileDisplay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">
+                        <i class="bi bi-person-plus-fill"></i> プロフィール登録
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">ニックネーム *</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="age" class="form-label">年齢 *</label>
+                                <input type="number" class="form-control" id="age" min="18" max="100" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="gender" class="form-label">性別 *</label>
+                                <select class="form-select" id="gender" required>
+                                    <option value="">選択してください</option>
+                                    <option value="男性">男性</option>
+                                    <option value="女性">女性</option>
+                                    <option value="その他">その他</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="occupation" class="form-label">現在の職業 *</label>
+                                <input type="text" class="form-control" id="occupation" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="destination" class="form-label">希望移住先 *</label>
+                                <select class="form-select" id="destination" required>
+                                    <option value="">選択してください</option>
+                                    <option value="北海道">北海道</option>
+                                    <option value="青森県">青森県</option>
+                                    <option value="岩手県">岩手県</option>
+                                    <option value="宮城県">宮城県</option>
+                                    <option value="秋田県">秋田県</option>
+                                    <option value="山形県">山形県</option>
+                                    <option value="福島県">福島県</option>
+                                    <option value="茨城県">茨城県</option>
+                                    <option value="栃木県">栃木県</option>
+                                    <option value="群馬県">群馬県</option>
+                                    <option value="埼玉県">埼玉県</option>
+                                    <option value="千葉県">千葉県</option>
+                                    <option value="神奈川県">神奈川県</option>
+                                    <option value="新潟県">新潟県</option>
+                                    <option value="富山県">富山県</option>
+                                    <option value="石川県">石川県</option>
+                                    <option value="福井県">福井県</option>
+                                    <option value="山梨県">山梨県</option>
+                                    <option value="長野県">長野県</option>
+                                    <option value="岐阜県">岐阜県</option>
+                                    <option value="静岡県">静岡県</option>
+                                    <option value="愛知県">愛知県</option>
+                                    <option value="三重県">三重県</option>
+                                    <option value="滋賀県">滋賀県</option>
+                                    <option value="京都府">京都府</option>
+                                    <option value="大阪府">大阪府</option>
+                                    <option value="兵庫県">兵庫県</option>
+                                    <option value="奈良県">奈良県</option>
+                                    <option value="和歌山県">和歌山県</option>
+                                    <option value="鳥取県">鳥取県</option>
+                                    <option value="島根県">島根県</option>
+                                    <option value="岡山県">岡山県</option>
+                                    <option value="広島県">広島県</option>
+                                    <option value="山口県">山口県</option>
+                                    <option value="徳島県">徳島県</option>
+                                    <option value="香川県">香川県</option>
+                                    <option value="愛媛県">愛媛県</option>
+                                    <option value="高知県">高知県</option>
+                                    <option value="福岡県">福岡県</option>
+                                    <option value="佐賀県">佐賀県</option>
+                                    <option value="長崎県">長崎県</option>
+                                    <option value="熊本県">熊本県</option>
+                                    <option value="大分県">大分県</option>
+                                    <option value="宮崎県">宮崎県</option>
+                                    <option value="鹿児島県">鹿児島県</option>
+                                    <option value="沖縄県">沖縄県</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="timing" class="form-label">移住希望時期 *</label>
+                                <select class="form-select" id="timing" required>
+                                    <option value="">選択してください</option>
+                                    <option value="半年以内">半年以内</option>
+                                    <option value="1年以内">1年以内</option>
+                                    <option value="2-3年以内">2-3年以内</option>
+                                    <option value="未定">未定</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="hobbies" class="form-label">趣味・興味</label>
+                                <input type="text" class="form-control" id="hobbies" placeholder="例: 登山、釣り、カフェ巡り">
+                            </div>
+                            <div class="col-12">
+                                <label for="bio" class="form-label">自己紹介 *</label>
+                                <textarea class="form-control" id="bio" rows="4" required placeholder="移住を考えたきっかけや、どんな生活を送りたいかなど..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="registerProfile()">登録する</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Detail Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">プロフィール詳細</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailModalBody">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample data for demonstration
+        let profiles = [];
+        let myProfile = null;
+
+        // Load data from localStorage
+        function loadData() {
+            const savedProfiles = localStorage.getItem('tokyoRelocationProfiles');
+            const savedMyProfile = localStorage.getItem('tokyoRelocationMyProfile');
+
+            if (savedProfiles) {
+                profiles = JSON.parse(savedProfiles);
+            } else {
+                // Add sample data
+                profiles = [
+                    {
+                        id: 1,
+                        name: "田中太郎",
+                        age: 32,
+                        gender: "男性",
+                        occupation: "ITエンジニア",
+                        destination: "長野県",
+                        timing: "1年以内",
+                        hobbies: "登山、キャンプ、写真撮影",
+                        bio: "東京で10年働きましたが、自然豊かな環境で暮らしたいと思い長野への移住を考えています。リモートワークも可能なので、週末は山登りを楽しみたいです。"
+                    },
+                    {
+                        id: 2,
+                        name: "佐藤花子",
+                        age: 28,
+                        gender: "女性",
+                        occupation: "グラフィックデザイナー",
+                        destination: "沖縄県",
+                        timing: "半年以内",
+                        hobbies: "ダイビング、ヨガ、カフェ巡り",
+                        bio: "フリーランスとして活動しています。温暖な気候と海が好きで、沖縄での新生活に向けて準備中です。同じタイミングで移住する仲間がいたら嬉しいです！"
+                    },
+                    {
+                        id: 3,
+                        name: "鈴木健",
+                        age: 35,
+                        gender: "男性",
+                        occupation: "マーケティング",
+                        destination: "北海道",
+                        timing: "2-3年以内",
+                        hobbies: "スキー、釣り、料理",
+                        bio: "北海道の大自然に憧れています。食材も新鮮で美味しいものが多く、スキーも楽しめる環境に魅力を感じています。まずは下見旅行から始める予定です。"
+                    },
+                    {
+                        id: 4,
+                        name: "山田美咲",
+                        age: 30,
+                        gender: "女性",
+                        occupation: "ライター",
+                        destination: "京都府",
+                        timing: "1年以内",
+                        hobbies: "茶道、寺社巡り、読書",
+                        bio: "日本の伝統文化に興味があり、京都で落ち着いた生活を送りたいと思っています。フリーランスなので場所にとらわれない働き方ができます。"
+                    },
+                    {
+                        id: 5,
+                        name: "伊藤誠",
+                        age: 27,
+                        gender: "男性",
+                        occupation: "Webデザイナー",
+                        destination: "長野県",
+                        timing: "半年以内",
+                        hobbies: "サイクリング、温泉、コーヒー",
+                        bio: "自然とテクノロジーの両立ができる場所を探しています。長野は都心からのアクセスも良く、自然も豊かなので最適だと思っています。"
+                    }
+                ];
+                saveProfiles();
+            }
+
+            if (savedMyProfile) {
+                myProfile = JSON.parse(savedMyProfile);
+            }
+        }
+
+        // Save data to localStorage
+        function saveProfiles() {
+            localStorage.setItem('tokyoRelocationProfiles', JSON.stringify(profiles));
+        }
+
+        function saveMyProfile() {
+            localStorage.setItem('tokyoRelocationMyProfile', JSON.stringify(myProfile));
+        }
+
+        // Display profiles
+        function displayProfiles(profilesToShow) {
+            const profileList = document.getElementById('profileList');
+
+            if (profilesToShow.length === 0) {
+                profileList.innerHTML = `
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="bi bi-person-x"></i>
+                            <h3>プロフィールが見つかりませんでした</h3>
+                            <p>フィルター条件を変更してみてください</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            profileList.innerHTML = profilesToShow.map(profile => `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card profile-card">
+                        <div class="profile-card-header text-center">
+                            <div class="profile-avatar mx-auto">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <h5 class="mb-1">${profile.name}</h5>
+                            <p class="mb-2">${profile.age}歳 / ${profile.gender}</p>
+                            <span class="badge-custom">
+                                <i class="bi bi-geo-alt-fill"></i> ${profile.destination}
+                            </span>
+                            <span class="badge-custom">
+                                <i class="bi bi-calendar-event"></i> ${profile.timing}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2"><strong><i class="bi bi-briefcase-fill"></i> 職業:</strong> ${profile.occupation}</p>
+                            <p class="mb-2"><strong><i class="bi bi-heart-fill"></i> 趣味:</strong> ${profile.hobbies || '未設定'}</p>
+                            <p class="text-muted small">${profile.bio.substring(0, 80)}...</p>
+                            <button class="btn btn-primary-custom w-100 mt-2" onclick="showDetail(${profile.id})">
+                                詳細を見る
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Display my profile
+        function displayMyProfile() {
+            const myProfileDisplay = document.getElementById('myProfileDisplay');
+
+            if (!myProfile) {
+                myProfileDisplay.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-person-plus"></i>
+                        <h3>プロフィールが未登録です</h3>
+                        <p>まずはプロフィールを登録しましょう</p>
+                        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            <i class="bi bi-person-plus-fill"></i> プロフィール登録
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            myProfileDisplay.innerHTML = `
+                <div class="text-center mb-4">
+                    <div class="profile-avatar mx-auto" style="width: 120px; height: 120px; font-size: 3rem; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <h3 class="mt-3">${myProfile.name}</h3>
+                    <p class="text-muted">${myProfile.age}歳 / ${myProfile.gender}</p>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-briefcase-fill"></i> 職業:</strong> ${myProfile.occupation}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-geo-alt-fill"></i> 希望移住先:</strong> ${myProfile.destination}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-calendar-event"></i> 移住時期:</strong> ${myProfile.timing}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-heart-fill"></i> 趣味:</strong> ${myProfile.hobbies || '未設定'}
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-chat-left-text-fill"></i> 自己紹介:</strong><br>
+                            ${myProfile.bio}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary-custom" onclick="editProfile()">
+                        <i class="bi bi-pencil-fill"></i> プロフィールを編集
+                    </button>
+                    <button class="btn btn-outline-danger ms-2" onclick="deleteProfile()">
+                        <i class="bi bi-trash-fill"></i> プロフィールを削除
+                    </button>
+                </div>
+            `;
+        }
+
+        // Register profile
+        function registerProfile() {
+            const form = document.getElementById('registerForm');
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const newProfile = {
+                id: myProfile ? myProfile.id : Date.now(),
+                name: document.getElementById('name').value,
+                age: parseInt(document.getElementById('age').value),
+                gender: document.getElementById('gender').value,
+                occupation: document.getElementById('occupation').value,
+                destination: document.getElementById('destination').value,
+                timing: document.getElementById('timing').value,
+                hobbies: document.getElementById('hobbies').value,
+                bio: document.getElementById('bio').value
+            };
+
+            myProfile = newProfile;
+
+            // Update in profiles list
+            const existingIndex = profiles.findIndex(p => p.id === myProfile.id);
+            if (existingIndex >= 0) {
+                profiles[existingIndex] = myProfile;
+            } else {
+                profiles.push(myProfile);
+            }
+
+            saveProfiles();
+            saveMyProfile();
+
+            // Close modal and refresh
+            bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+            form.reset();
+
+            displayProfiles(profiles);
+            displayMyProfile();
+
+            alert('プロフィールを登録しました！');
+        }
+
+        // Edit profile
+        function editProfile() {
+            if (!myProfile) return;
+
+            document.getElementById('name').value = myProfile.name;
+            document.getElementById('age').value = myProfile.age;
+            document.getElementById('gender').value = myProfile.gender;
+            document.getElementById('occupation').value = myProfile.occupation;
+            document.getElementById('destination').value = myProfile.destination;
+            document.getElementById('timing').value = myProfile.timing;
+            document.getElementById('hobbies').value = myProfile.hobbies || '';
+            document.getElementById('bio').value = myProfile.bio;
+
+            new bootstrap.Modal(document.getElementById('registerModal')).show();
+        }
+
+        // Delete profile
+        function deleteProfile() {
+            if (!confirm('プロフィールを削除してもよろしいですか？')) return;
+
+            profiles = profiles.filter(p => p.id !== myProfile.id);
+            myProfile = null;
+
+            saveProfiles();
+            localStorage.removeItem('tokyoRelocationMyProfile');
+
+            displayProfiles(profiles);
+            displayMyProfile();
+
+            alert('プロフィールを削除しました');
+        }
+
+        // Show profile detail
+        function showDetail(profileId) {
+            const profile = profiles.find(p => p.id === profileId);
+            if (!profile) return;
+
+            const detailBody = document.getElementById('detailModalBody');
+            detailBody.innerHTML = `
+                <div class="text-center mb-4">
+                    <div class="profile-avatar mx-auto" style="width: 120px; height: 120px; font-size: 3rem; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <h3 class="mt-3">${profile.name}</h3>
+                    <p class="text-muted">${profile.age}歳 / ${profile.gender}</p>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-briefcase-fill"></i> 職業:</strong> ${profile.occupation}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-geo-alt-fill"></i> 希望移住先:</strong> ${profile.destination}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-calendar-event"></i> 移住時期:</strong> ${profile.timing}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-heart-fill"></i> 趣味:</strong> ${profile.hobbies || '未設定'}
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-tag w-100">
+                            <strong><i class="bi bi-chat-left-text-fill"></i> 自己紹介:</strong><br>
+                            ${profile.bio}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            new bootstrap.Modal(document.getElementById('detailModal')).show();
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const destination = document.getElementById('filterDestination').value;
+            const gender = document.getElementById('filterGender').value;
+            const timing = document.getElementById('filterTiming').value;
+
+            let filtered = profiles.filter(profile => {
+                if (destination && profile.destination !== destination) return false;
+                if (gender && profile.gender !== gender) return false;
+                if (timing && profile.timing !== timing) return false;
+                return true;
+            });
+
+            displayProfiles(filtered);
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            displayProfiles(profiles);
+            displayMyProfile();
+
+            // Tab change event
+            document.getElementById('my-profile-tab').addEventListener('shown.bs.tab', function() {
+                displayMyProfile();
+            });
+        });
+    </script>
+</body>
+</html>
