@@ -4,8 +4,8 @@ cd /d "%~dp0"
 python -m src.main
 if %errorlevel% neq 0 (
     echo.
-    echo [エラー] プログラムの実行に失敗しました。
-    echo まずは setup.bat を実行してセットアップを完了してください。
+    echo [ERROR] Failed to run the program.
+    echo Please run setup.bat first.
     echo.
     pause
 )
