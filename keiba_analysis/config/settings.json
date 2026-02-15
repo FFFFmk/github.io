@@ -1,0 +1,23 @@
+{
+  "budget": 10000,
+  "min_race_number": 10,
+  "request_delay": 2,
+  "max_retries": 3,
+  "venues": [
+    "東京", "中山", "阪神", "京都", "中京",
+    "新潟", "福島", "小倉", "札幌", "函館"
+  ],
+  "recommendation_thresholds": {
+    "strong_recommend_rr": 1.5,
+    "recommend_rr": 1.2,
+    "consider_rr": 1.0
+  },
+  "investment_allocation": {
+    "honmei_ratio": 0.5,
+    "taikou_ratio": 0.3,
+    "ana_ratio": 0.2,
+    "honmei_ev_threshold": 0.4,
+    "taikou_ev_threshold": 0.2,
+    "ana_min_odds": 10
+  }
+}
