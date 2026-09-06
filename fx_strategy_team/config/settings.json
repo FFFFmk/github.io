@@ -1,0 +1,36 @@
+{
+  "pairs": {
+    "GBPJPY": {
+      "entry_period": 20,
+      "exit_period": 10,
+      "trend_fast_ema": 50,
+      "trend_slow_ema": 200,
+      "atr_period": 14,
+      "atr_multiplier": 3.0,
+      "risk_pct_per_trade": 0.75,
+      "pip_size": 0.01,
+      "pip_value_per_unit": 0.01,
+      "quote_currency": "JPY"
+    },
+    "GBPUSD": {
+      "entry_period": 20,
+      "exit_period": 10,
+      "trend_fast_ema": 50,
+      "trend_slow_ema": 200,
+      "atr_period": 14,
+      "atr_multiplier": 3.0,
+      "risk_pct_per_trade": 1.0,
+      "pip_size": 0.0001,
+      "pip_value_per_unit": 0.0001,
+      "quote_currency": "USD"
+    }
+  },
+  "portfolio": {
+    "max_total_risk_pct": 6.0
+  },
+  "drawdown_rules": {
+    "halve_risk_at_pct": 10.0,
+    "stop_trading_at_pct": 20.0
+  },
+  "default_equity": 1000000
+}
